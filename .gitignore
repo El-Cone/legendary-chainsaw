@@ -25,6 +25,7 @@ bld/
 # Arduino VM
 _vm/
 __vm/
+*.vmps.*
 
 # Visual Studio 2015 cache/options directory
 .vs/
