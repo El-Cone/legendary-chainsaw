@@ -38,30 +38,31 @@ public:
 
 class Pong {
 private:
-	int Pos, InversedSpeed, Step, Size, Length;
+	int Size, Length;
+	uint8_t WaitSteps;
+	uint16_t Pos;
+	float Speed, Acceleration;
 	uint8_t R, G, B;
 	bool Clockwise;
 public:
-	Pong(int invSpd, int size, uint8_t r, uint8_t g, uint8_t b, bool clockwise, int startPos, int length ) {
+	Pong(float speed, float acceleration, int size, uint8_t r, uint8_t g, uint8_t b, bool clockwise, uint16_t startPos, int length, uint8_t waitSteps) {
 		Size = size;
-		InversedSpeed = invSpd;
+		Speed = speed;
+		Acceleration = acceleration + 1;
 		Clockwise = clockwise;
-		if(!Clockwise)
-			Pos = 95;
+		if (!Clockwise)
+			Pos = length;
 		R = r; G = g; B = b;
 		Pos = startPos;
 		Length = length;
 	}
 	void Next(int Amount) {
-		Step += Amount;
-		if (Step >= InversedSpeed) {
-			Step %= InversedSpeed;
-			if (Clockwise)
-				Pos++;
-			else
-				Pos--;
-		}
-		if (Pos <= 0 || Pos >= Length)
+		if (Clockwise)
+			Pos += Speed * Amount;
+		else
+			Pos -= Speed * Amount;
+		Speed *= Acceleration;
+		if (Pos <= 0 || Pos >= Length + WaitSteps)
 			Clockwise = !Clockwise;
 	}
 	void BlendPattern() {
@@ -75,8 +76,8 @@ public:
 
 
 Rainbow r = Rainbow();
-Pong p = Pong(1,3, 255,255,255, true, 1, NUM_LEDS);
-Pong q = Pong(1, 3, 255, 0, 0, false, 96, NUM_LEDS);
+Pong p = Pong(1, 0, 3, 255, 255, 255, true, 1, NUM_LEDS, 0);
+Pong q = Pong(1, 0, 3, 255, 0, 0, false, 96, NUM_LEDS, 0);
 
 int Offset;
 
