@@ -27,6 +27,7 @@ _vm/
 __vm/
 *.vmps.*
 *.vcsproj*
+*.vcsproj
 
 # Visual Studio 2015 cache/options directory
 .vs/
