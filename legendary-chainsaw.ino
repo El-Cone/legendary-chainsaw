@@ -36,8 +36,8 @@ public:
 	}
 };
 
-class Pong {
-private:
+class Blip {
+protected:
 	int Size, Length;
 	uint8_t WaitSteps;
 	uint16_t Pos;
@@ -45,16 +45,10 @@ private:
 	uint8_t R, G, B;
 	bool Clockwise;
 public:
-	Pong(float speed, float acceleration, int size, uint8_t r, uint8_t g, uint8_t b, bool clockwise, uint16_t startPos, int length, uint8_t waitSteps) {
-		Size = size;
-		Speed = speed;
-		Acceleration = acceleration + 1;
-		Clockwise = clockwise;
-		if (!Clockwise)
-			Pos = length;
-		R = r; G = g; B = b;
-		Pos = startPos;
-		Length = length;
+	Blip() {}
+	Blip(float speed, float acceleration, int size, uint8_t r, uint8_t g, uint8_t b, bool clockwise, uint16_t startPos, int length, uint8_t waitSteps) {
+		Size = size; R = r; G = g; B = b; Length = length; Speed = speed; 
+		Acceleration = acceleration + 1; Clockwise = clockwise; Pos = startPos;
 	}
 	void Next(int Amount) {
 		if (Clockwise)
@@ -62,6 +56,17 @@ public:
 		else
 			Pos -= Speed * Amount;
 		Speed *= Acceleration;
+
+	}
+};
+
+class Pong :public Blip {
+public:
+	Pong(float speed, float acceleration, int size, uint8_t r, uint8_t g, uint8_t b, bool clockwise, uint16_t startPos, int length, uint8_t waitSteps) {
+		Blip::Blip(speed, acceleration, size, r, g, b, clockwise, startPos, length, waitSteps);
+	}
+	void Next(int Amount) {
+		Blip::Next(Amount);
 		if (Pos <= 0 || Pos >= Length + WaitSteps)
 			Clockwise = !Clockwise;
 	}
