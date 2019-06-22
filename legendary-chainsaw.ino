@@ -96,56 +96,53 @@ public:
 		Color = color;
 		Brightness = BRIGHTNESS;
 	}
-	OneColor(RGB color, uint8_t brightness) {
+	OneColor(RGB color, byte brightness) {
 		Color = color;
 		Brightness = brightness;
 	}
 	void White(bool day = true) {
 		Color = { 255, day ? 255 : 200, day ? 127 : 50 };
 	}
-	void WhiteK(uint8_t temp) {
+	void WhiteK(byte temp) {
 		const int rangeSize = 32;
-		uint8_t range = temp / rangeSize;
+		byte range = temp / rangeSize;
 		temp %= rangeSize;
-		Color.R = 255;
-		Color.G = 255;
-		Color.B = 255;
+		Color = { 255, 255, 255 };
 		Brightness = 127;
 		switch (range)
 		{
-		case 0:
-			Color.G = 96 + temp * 2;
-			Color.B = 2 * temp;
-			break;
-		case 1:
-			Color.G = 160 + temp / 2;
-			Color.B = 64 + temp;
-			break;
-		case 2:
-			Color.G = 176 + temp;
-			Color.B = 96 + temp;
-			break;
-		case 3:
-			Color.G = 208 + temp / 2;
-			Color.B = 160 + temp;
-			break;
-		case 4:
-			Color.G = 224 + temp;
-			Color.B = 192 + temp;
-			break;
-		case 5:
-			Color.B = 224 + temp;
-			break;
-		case 6:
-			Color.R = 255 - temp * 2;
-			Color.G = 255 - temp;
-			break;
-		case 7:
-			Color.R = 192 - temp * 4;
-			Color.G = 224 - temp * 2;
-			break;
+			case 0:
+				Color.G = 96 + temp * 2;
+				Color.B = 2 * temp;
+				break;
+			case 1:
+				Color.G = 160 + temp / 2;
+				Color.B = 64 + temp;
+				break;
+			case 2:
+				Color.G = 176 + temp;
+				Color.B = 96 + temp;
+				break;
+			case 3:
+				Color.G = 208 + temp / 2;
+				Color.B = 160 + temp;
+				break;
+			case 4:
+				Color.G = 224 + temp;
+				Color.B = 192 + temp;
+				break;
+			case 5:
+				Color.B = 224 + temp;
+				break;
+			case 6:
+				Color.R = 255 - temp * 2;
+				Color.G = 255 - temp;
+				break;
+			case 7:
+				Color.R = 192 - temp * 4;
+				Color.G = 224 - temp * 2;
+				break;
 		}
-		//White(false);
 	}
 	void SetPattern() {
 		for (int i = 0; i <= NUM_LEDS; i++)
@@ -168,7 +165,7 @@ private:
 		dB = (Colors[idx2].B - Colors[idx1].B) / Steps;
 	}
 public:
-	ColorLoop() {};		
+	ColorLoop() {};
 
 	ColorLoop(RGB colors[], byte size, byte steps) {
 		Colors = colors;
@@ -563,7 +560,6 @@ void setupStrip()
 	p1.Setup();
 	p7.Setup();
 	LedStrip.show(); // Initialize all pixels to 'off'
-
 }
 
 void setup() {
@@ -571,6 +567,6 @@ void setup() {
 }
 
 void loop() {
-	p2.Looper();
+	p5.Looper();
 	LedStrip.show();
 }
