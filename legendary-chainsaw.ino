@@ -105,6 +105,7 @@ public:
 	}
 	void WhiteK(byte temp) {
 		const int rangeSize = 32;
+		temp ^= 255;
 		byte range = temp / rangeSize;
 		temp %= rangeSize;
 		Color = { 255, 255, 255 };
@@ -537,6 +538,18 @@ public:
 	}
 };
 
+class Prog08 {
+	OneColor color = OneColor();
+public:
+	void Setup() {
+		color.WhiteK(176);
+		color.SetPattern();
+	}
+	void Looper() {
+		delay(12000);
+	}
+};
+
 //********************************************************
 //============  Operation
 //*******************************************************/
@@ -551,6 +564,7 @@ Prog04 p4 = Prog04(); //Clau
 Prog05 p5 = Prog05(); //WhiteDemo
 Prog06 p6 = Prog06(); //RainbowDemo
 Prog07 p7 = Prog07(); //ColorLoop
+Prog08 p8 = Prog08(); //White
 
 void setupStrip()
 {
@@ -559,6 +573,7 @@ void setupStrip()
 	oC.SetPattern();
 	p1.Setup();
 	p7.Setup();
+	p8.Setup();
 	LedStrip.show(); // Initialize all pixels to 'off'
 }
 
@@ -567,6 +582,6 @@ void setup() {
 }
 
 void loop() {
-	p5.Looper();
+	p8.Looper();
 	LedStrip.show();
 }
