@@ -11,7 +11,6 @@
 
 #define PIN 2
 #define PN2 4
-//#define NUM_LEDS 680 //261 
 #define NUM_LEDS_L 256
 #define NUM_LEDS_R 256
 #define NUM_LEDS NUM_LEDS_L + NUM_LEDS_R
@@ -80,8 +79,6 @@ public:
 };
 
 Strip LedStrip = Strip();
-
-//Adafruit_NeoPixel stripR = Adafruit_NeoPixel(NUM_LEDS, PINTwee, NEO_RGB + NEO_KHZ800); 
 
 //********************************************************
 //============  Entities
@@ -216,8 +213,6 @@ public:
 	{
 		C1 = OneColor(color1);
 		C2 = OneColor(color2);
-		//C1.R = color1.R; C1.G = color1.G; C1.B = color1.B;
-		//C2.R = color2.R; C2.G = color2.G; C2.B = color2.B;
 	}
 
 	void Next() {
@@ -248,25 +243,12 @@ public:
 			}
 			LedStrip.setPixelColor(i, r, g, b, BRIGHTNESS);
 		}
-		//stripL.setPixelColor(Pos, 255, 255, 255, 255);  //Debug
 	}
 };
 
 class Rainbow {
 private:
 	uint8_t Pos;
-	//uint32_t Wheel(byte WheelPos) {
-	//	WheelPos = 255 - WheelPos;
-	//	if (WheelPos < 85) {
-	//		return LedStrip.Color(255 - WheelPos * 3, 0, WheelPos * 3);
-	//	}
-	//	if (WheelPos < 170) {
-	//		WheelPos -= 85;
-	//		return LedStrip.Color(0, WheelPos * 3, 255 - WheelPos * 3);
-	//	}
-	//	WheelPos -= 170;
-	//	return LedStrip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
-	//}
 	RGB Wheel(byte WheelPos) {
 		WheelPos = 255 - WheelPos;
 		if (WheelPos < 85) {
@@ -287,7 +269,6 @@ public:
 	void SetPattern() {
 		for (int i = 0; i < LedStrip.numPixels(); i++) {
 			LedStrip.setPixelColor(i, Wheel((i + Pos) & 255));
-			//strip.setPixelColor(i, Wheel((i + Pos) & 255, stripR));
 		}
 	}
 };
@@ -297,15 +278,6 @@ private:
 	uint8_t Pos;
 
 	void Wheel(int index, byte WheelPos) {
-		/*
-		WheelPos;
-		if (WheelPos < 128) {
-		  int g = 127 - WheelPos == 255 ? 0 : WheelPos;
-		  return strip.Color(192, g, 0);
-		}
-		return strip.Color(192, WheelPos == 255 ? 0 : 0+WheelPos,0);
-		*/
-		//WheelPos = 255 - WheelPos;
 		WheelPos %= 255;
 		if (WheelPos < 85) {
 			LedStrip.setPixelColor(index,
@@ -338,94 +310,10 @@ public:
 	void SetPattern() {
 		for (int i = 0; i < LedStrip.numPixels(); i++) {
 			Wheel(i + Pos % 255, i);
-			//strip.setPixelColor(i, Wheel((i + Pos) & 255, stripR));
 		}
 		LedStrip.show();
 	}
 };
-
-//
-//class Blip {
-//protected:
-//  int Size;
-//  uint16_t Pos;
-//  float Speed, Acceleration;
-//  uint8_t R, G, B;
-//  bool Clockwise;
-//public:
-//  Blip() {}
-//  Blip(float speed, float acceleration, int size, uint8_t r, uint8_t g, uint8_t b, bool clockwise, uint16_t startPos) {
-//    Size = size; R = r; G = g; B = b; Speed = speed;
-//    Acceleration = acceleration + 1; Clockwise = clockwise; Pos = startPos;
-//  }
-//  void Next(int Amount = 1) {
-//    if (Clockwise)
-//      Pos += Speed * Amount;
-//    else
-//      Pos -= Speed * Amount;
-//    Speed *= Acceleration;
-//  }
-//  void BlendPattern(Adafruit_NeoPixel strip) {
-//    int posA = Pos;
-//    int posB = Pos + Clockwise ? Size : -Size;
-//    for (uint16_t i = Clockwise ? Pos : Pos - Size; i < Clockwise ? Pos + Size : Pos; i++)
-//      if (i <= NUM_LEDS)
-//        strip.setPixelColor(i, R, G, B, 255);
-//  }
-//};
-//
-//class Pong : public Blip {
-//private:
-//  int Length;
-//public:
-//  Pong(float speed, float acceleration, int size, uint8_t r, uint8_t g, uint8_t b, bool clockwise, uint16_t startPos, int length) :
-//    Blip(speed, acceleration, size, r, g, b, clockwise, startPos)
-//  {
-//    Length = length;
-//  }
-//  void Next(int Amount = 1) {
-//    Blip::Next(Amount);
-//    if (Pos <= 0 || Pos >= Length)
-//      Clockwise = !Clockwise;
-//  }
-//};
-//
-//class Walker : public Blip {
-//private:
-//  uint8_t WaitSteps, WaitCount;
-//  uint16_t StartPos, EndPos;
-//  bool Recurring, Dead;
-//public:
-//  Walker(float speed, float acceleration, int size, uint8_t r, uint8_t g, uint8_t b, bool clockwise, uint16_t startPos, uint16_t endPos, uint8_t waitSteps, bool recurring) :
-//    Blip(speed, acceleration, size, r, g, b, clockwise, startPos)
-//  {
-//    WaitSteps = waitSteps; Recurring = recurring; StartPos = startPos; EndPos = endPos;
-//  }
-//  void Next(int Amount = 1) {
-//    if (Dead)
-//    {
-//      if (Recurring && WaitSteps++ >= WaitCount)
-//        Revive();
-//      else
-//        return;
-//    }
-//    Blip::Next(Amount);
-//    if ((Clockwise && (Pos < StartPos || Pos > EndPos)) || (!Clockwise && (Pos > StartPos || Pos < EndPos)))
-//      Dead = true;
-//  }
-//  void BlendPattern() {
-//    if (!Dead)
-//      Blip::BlendPattern();
-//
-//  }
-//  void Revive() {
-//    if (!(Recurring && Dead))
-//      return;
-//    Pos = StartPos;
-//    Dead = false;
-//  }
-//};
-
 
 class Siren {
 private:
@@ -521,14 +409,14 @@ public:
 	//Blip b = Blip(1,0,3,255,0,0,true, 40);
 	void Looper() {
 		//b.BlendPattern();
-	//b.Next();
-  //  p.BlendPattern();
-	//q.BlendPattern();
-	//w.BlendPattern();
-	//r.Next();
-  //  p.Next();
-	//q.Next();
-	//w.Next();
+		//b.Next();
+		//p.BlendPattern();
+		//q.BlendPattern();
+		//w.BlendPattern();
+		//r.Next();
+		//p.Next();
+		//q.Next();
+		//w.Next();
 		delay(30);
 	}
 }; //Original
@@ -555,7 +443,6 @@ public:
 
 		delay(40);
 	}
-
 }; //Fire
 
 class Prog02 {
@@ -578,11 +465,6 @@ public:
 		delay(1); //40
 	}
 }; //Rainbow
-
-void SleepSecs(int secs)
-{
-	delay(1000 * secs);
-}
 
 class Prog03 {
 public:
@@ -619,7 +501,6 @@ public:
 			OC.WhiteK(255 - i);
 			OC.SetPattern();
 			LedStrip.show();
-			//stripL.show();
 			delay(250);
 		}
 	}
@@ -678,7 +559,6 @@ void setupStrip()
 {
 	LedStrip.begin();
 	LedStrip.setBrightness(BRIGHTNESS);
-	//oC.WhiteK(0); //False = nacht
 	oC.SetPattern();
 	p1.Setup();
 	p7.Setup();
@@ -687,7 +567,6 @@ void setupStrip()
 }
 
 void setup() {
-	//setupStrip(stripR);
 	setupStrip();
 }
 
