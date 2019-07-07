@@ -556,7 +556,10 @@ class Prog08 {
 	OneColor color = OneColor();
 public:
 	void Setup() {
-		color.WhiteK(128);
+		Setup(128);
+	}
+	void Setup(int temperature) {
+		color.WhiteK(temperature);
 		color.SetCorrection(1, .925, .75);
 		color.SetPattern();
 	}
@@ -588,7 +591,7 @@ void setupStrip()
 	oC.SetPattern();
 	p1.Setup();
 	p7.Setup();
-	p8.Setup();
+	p8.Setup(200);
 	LedStrip.show(); // Initialize all pixels to 'off'
 }
 
