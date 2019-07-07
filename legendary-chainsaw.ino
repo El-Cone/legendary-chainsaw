@@ -85,6 +85,14 @@ Strip LedStrip = Strip();
 //*******************************************************/
 
 class OneColor {
+	double CorrectionR = 1;
+	double CorrectionG = 1;
+	double CorrectionB = 1;
+	void Correct() {
+		Color.R *= CorrectionR;
+		Color.G *= CorrectionG;
+		Color.B *= CorrectionB;
+	}
 public:
 	RGB Color;
 	byte *R = &Color.R;
@@ -99,6 +107,12 @@ public:
 	OneColor(RGB color, byte brightness) {
 		Color = color;
 		Brightness = brightness;
+	}
+	void SetCorrection(double r, double g, double b) {
+		CorrectionR = r;
+		CorrectionG = g;
+		CorrectionB = b;
+		Correct();
 	}
 	void White(bool day = true) {
 		Color = { 255, day ? 255 : 200, day ? 127 : 50 };
@@ -144,6 +158,7 @@ public:
 				Color.G = 224 - temp * 2;
 				break;
 		}
+		Correct();
 	}
 	void SetPattern() {
 		for (int i = 0; i <= NUM_LEDS; i++)
@@ -368,7 +383,6 @@ public:
 		else
 			Y = random(0, NUM_LEDS);
 		Redraw();
-
 	}
 	void Redraw() {
 		LedStrip.setPixelColor(Previous ? X : Y, R, G, B, Brightness);
@@ -542,7 +556,8 @@ class Prog08 {
 	OneColor color = OneColor();
 public:
 	void Setup() {
-		color.WhiteK(176);
+		color.WhiteK(128);
+		color.SetCorrection(1, .925, .75);
 		color.SetPattern();
 	}
 	void Looper() {
