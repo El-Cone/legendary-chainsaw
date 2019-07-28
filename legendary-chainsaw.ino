@@ -202,7 +202,6 @@ public:
 	}
 
 	void SetPattern() {
-
 		byte r = Colors[Current].R + dR * Pos;
 		byte g = Colors[Current].G + dG * Pos;
 		byte b = Colors[Current].B + dB * Pos;
@@ -210,7 +209,7 @@ public:
 		{
 			LedStrip.setPixelColor(i, r, g, b, BRIGHTNESS);
 		}
-		LedStrip.setPixelColor(Pos, 255, 255, 255, 255);
+		//LedStrip.setPixelColor(Pos, 255, 255, 255, 255); //debug
 	}
 };
 
@@ -542,7 +541,6 @@ public:
 		{ 255, 0, 255}
 	};
 	void Setup() {
-
 		CL = ColorLoop(colors, size, 32);
 	};
 	void Looper() {
