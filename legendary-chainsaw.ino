@@ -556,9 +556,13 @@ public:
 	void Setup() {
 		Setup(128);
 	}
-	void Setup(int temperature) {
+	void Setup(byte temperature) {
 		color.WhiteK(temperature);
 		color.SetCorrection(1, .925, .75);
+		color.SetPattern();
+	}
+	void Setup(byte r, byte g, byte b) {
+		color = OneColor(RGB{ r, g, b });
 		color.SetPattern();
 	}
 	void Looper() {
@@ -580,7 +584,7 @@ Prog04 p4 = Prog04(); //Clau
 Prog05 p5 = Prog05(); //WhiteDemo
 Prog06 p6 = Prog06(); //RainbowDemo
 Prog07 p7 = Prog07(); //ColorLoop
-Prog08 p8 = Prog08(); //White
+Prog08 p8 = Prog08(); //White or color
 
 void setupStrip()
 {
@@ -589,7 +593,7 @@ void setupStrip()
 	oC.SetPattern();
 	p1.Setup();
 	p7.Setup();
-	p8.Setup(200);
+	p8.Setup(64, 60, 56);
 	LedStrip.show(); // Initialize all pixels to 'off'
 }
 
